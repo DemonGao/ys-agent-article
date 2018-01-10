@@ -100,7 +100,7 @@
                             </div>
                             <p>{{i.name}}</p>
                         </div>
-                        <div class="item" v-if="!userTags['tagType'+index] && item.articleTags.length!==8 && ix === 6"
+                        <div class="item" v-if="!userTags['tagType'+index] && item.articleTags.length!==10 && ix === 8"
                              @click="toggleMore('tagType'+index)">
                             <div class="circular" :style="{'backgroundColor': color}">
                                 <i class="iconfont icon-add"></i>
@@ -139,7 +139,7 @@
                             <p>添加</p>
                         </div>
                         <template v-for="(item, index) in userTags.tags">
-                            <div class="item" v-if="!userTags['userTags'] && userTags.tags.length!==7 && index === 6"
+                            <div class="item" v-if="!userTags['userTags'] && userTags.tags.length!==9 && index === 7"
                                  @click="toggleMore('userTags')">
                                 <div class="circular" :style="{'backgroundColor': color}">
                                     <i class="iconfont icon-add"></i>

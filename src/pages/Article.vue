@@ -150,6 +150,7 @@
                         },
                         tips: true
                     }).then(result => {
+                        resolve(result)
                         this.articleDetail = result.articleRedis
                         result.ThumbsUpUser && (this.ThumbsUpUser = result.ThumbsUpUser)
                         this.readcount = result.readcount
@@ -172,7 +173,6 @@
                                 this.ThumbsUpUser.push({headurl: `/static/agent/article/img/userImg/${userImg[i]}.jpg`})
                             }
                         }
-                        resolve(result)
                     })
                 })
             },
