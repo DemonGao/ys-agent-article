@@ -10,7 +10,7 @@
         .iconGroup {
             .userTags {
                 padding: 10px 0;
-                max-height: 50vw;
+                max-height: 40vw;
                 overflow: hidden;
                 position: relative;
                 box-sizing: border-box;
@@ -21,14 +21,14 @@
                     display: flex;
                     flex-flow: column nowrap;
                     justify-content: space-evenly;
-                    width: 25vw;
-                    height: 25vw;
+                    width: 20vw;
+                    height: 20vw;
                     text-align: center;
                     box-sizing: border-box;
                     .circular {
-                        height: 11.7vw;
-                        width: 11.7vw;
-                        line-height: 11.7vw;
+                        height: 10vw;
+                        width: 10vw;
+                        line-height: 10vw;
                         margin: 0 auto 3px;
                         background-color: #dedcdd;
                         -webkit-border-radius: 100% 100%;
@@ -36,11 +36,11 @@
                         border-radius: 100% 100%;
                         i.iconfont {
                             color: #ffffff;
-                            font-size: 6.93vw;
+                            font-size: 6vw;
                         }
                     }
                     p {
-                        font-size: 14px;
+                        font-size: 12px;
                     }
                 }
             }
@@ -100,17 +100,17 @@
                             </div>
                             <p>{{i.name}}</p>
                         </div>
-                        <div class="item" v-if="!userTags['tagType'+index] && item.articleTags.length!==8 && ix === 6"
+                        <div class="item" v-if="!userTags['tagType'+index] && item.articleTags.length!==10 && ix === 8"
                              @click="toggleMore('tagType'+index)">
                             <div class="circular" :style="{'backgroundColor': color}">
-                                <i class="iconfont icon-add"></i>
+                                <i class="iconfont icon-more"></i>
                             </div>
                             <p>查看更多</p>
                         </div>
                     </template>
                     <div class="item" v-if="userTags['tagType'+index]" @click="toggleMore('tagType'+index)">
                         <div class="circular" :style="{'backgroundColor': color}">
-                            <i class="iconfont icon-add"></i>
+                            <i class="iconfont icon-triangleupfill"></i>
                         </div>
                         <p>收起</p>
                     </div>
@@ -139,10 +139,10 @@
                             <p>添加</p>
                         </div>
                         <template v-for="(item, index) in userTags.tags">
-                            <div class="item" v-if="!userTags['userTags'] && userTags.tags.length!==7 && index === 6"
+                            <div class="item" v-if="!userTags['userTags'] && userTags.tags.length!==9 && index === 7"
                                  @click="toggleMore('userTags')">
                                 <div class="circular" :style="{'backgroundColor': color}">
-                                    <i class="iconfont icon-add"></i>
+                                    <i class="iconfont icon-more"></i>
                                 </div>
                                 <p>查看更多</p>
                             </div>
@@ -156,7 +156,7 @@
                         </template>
                         <div class="item" v-if="userTags['userTags']" @click="toggleMore('userTags')">
                             <div class="circular" :style="{'backgroundColor': color}">
-                                <i class="iconfont icon-add"></i>
+                                <i class="iconfont icon-triangleupfill"></i>
                             </div>
                             <p>收起</p>
                         </div>
@@ -453,7 +453,7 @@
                 }
                 if (this.userTags[el]) {
                     this.$set(this.userTags, el, false)
-                    dom.style.maxHeight = '50vw'
+                    dom.style.maxHeight = '40vw'
                     dom.style.overflow = 'hidden'
                 } else {
                     this.$set(this.userTags, el, true)
