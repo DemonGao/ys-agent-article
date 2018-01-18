@@ -50,218 +50,269 @@
 
 <template>
     <div class="home" id="home">
-        <Group
-            :gutter="0"
-            title-color="#333"
-            title="每日推荐"
-        >
-            <template v-if="recommend3Articles && recommend3Articles.length!==0">
-                <template v-for="(item, index) in recommend3Articles">
-                    <DmPanel
-                        class="article"
-                        :class="['dm__panel', 'article', 'dm-border-b']"
-                        headWidth='75px'
-                        headHeight="60px"
-                        :lineClamp=2
-                        :img="item.imgSrc"
-                        :title='item.title'
-                        @click.native="openDialog(index, true)"
-                    >
-                        {{item.shortcontent}}
-                        <div slot="other" class="util">
-                            <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}</div>
-                            <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}</div>
-                            <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}</div>
-                        </div>
-                    </DmPanel>
-                </template>
-            </template>
-            <box v-else gap="15px">
-                <divider>暂时没有数据</divider>
-            </box>
-        </Group>
-
-        <!--第一身份-->
-        <Group
-            v-for="(item, index) in tagTypelist"
-            :key="index"
-            class="iconGroup"
-            :gutter="0"
-            title-color="#333"
-            :title="item.name"
-        >
-            <template v-if="item.articleTags && item.articleTags.length!==0">
-                <!--<scroller lock-y :scrollbar-x=false>-->
-                <div class="userTags" :ref="'tagType'+index">
-                    <template v-for="(i, ix) in item.articleTags">
-                        <div class="item" @click="routerLink('ArticleList',{tagid: i.id})">
-                            <div class="circular" :style="{'backgroundColor': i.colorcode}">
-                                <i :class="['iconfont '+ i.iconclass]"></i>
-                            </div>
-                            <p>{{i.name}}</p>
-                        </div>
-                        <div class="item" v-if="!userTags['tagType'+index] && item.articleTags.length!==10 && ix === 8"
-                             @click="toggleMore('tagType'+index)">
-                            <div class="circular" :style="{'backgroundColor': color}">
-                                <i class="iconfont icon-more"></i>
-                            </div>
-                            <p>查看更多</p>
-                        </div>
+        <DmLoading v-if="loading" img="/static/common/img/loadingImg.png"></DmLoading>
+        <template v-else="loading">
+            <Group
+                :gutter="0"
+                title-color="#333"
+                title="每日推荐"
+            >
+                <template v-if="recommend3Articles && recommend3Articles.length!==0">
+                    <template v-for="(item, index) in recommend3Articles">
+                        <swipeout>
+                            <swipeout-item
+                                transition-mode="follow"
+                            >
+                                <div slot="right-menu">
+                                    <!--<swipeout-button style="border-radius: 100%;overflow:hidden;width: 70px;height: 70px;margin-top: calc(15vw - 35px);margin-left:5px" @click.native="onButtonClick('fav')" type="primary">收藏-->
+                                    <!--</swipeout-button>-->
+                                    <swipeout-button :type="item.iscommend ? 'warn' : 'primary'"
+                                                     @click.native="commend(index, 'recommend3Articles')">
+                                        <template v-if="item.iscommend">
+                                            <i class="iconfont icon-likefill"></i> 已推荐
+                                        </template>
+                                        <template v-else="item.iscommend">
+                                            <i class="iconfont icon-like"></i> 推荐
+                                        </template>
+                                    </swipeout-button>
+                                </div>
+                                <template slot="content">
+                                    <DmPanel
+                                        class="article"
+                                        :class="['dm__panel', 'article', 'dm-border-b']"
+                                        headWidth='75px'
+                                        headHeight="60px"
+                                        :lineClamp=2
+                                        :img="item.imgSrc"
+                                        :title='item.title'
+                                        @click.native="openDialog(index, true)"
+                                    >
+                                        {{item.shortcontent}}
+                                        <div slot="other" class="util">
+                                            <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}
+                                            </div>
+                                            <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}
+                                            </div>
+                                            <div class="item"><i
+                                                class="iconfont icon-attentionfill"></i>{{item.readcount}}
+                                            </div>
+                                        </div>
+                                    </DmPanel>
+                                </template>
+                            </swipeout-item>
+                        </swipeout>
                     </template>
-                    <div class="item" v-if="userTags['tagType'+index]" @click="toggleMore('tagType'+index)">
-                        <div class="circular" :style="{'backgroundColor': color}">
-                            <i class="iconfont icon-triangleupfill"></i>
-                        </div>
-                        <p>收起</p>
-                    </div>
-                </div>
-            </template>
-            <template v-else>
-                <box gap="15px">
+                </template>
+                <box v-else gap="15px">
                     <divider>暂时没有数据</divider>
                 </box>
-            </template>
-        </Group>
-        <!--第二身份-->
-        <Group
-            class="iconGroup"
-            :gutter="0"
-            title-color="#333"
-            :title="userTags.name ? userTags.name : ''"
-        >
-            <template>
-                <div class="userTags" ref="userTags">
-                    <template v-if="userTags.tags && userTags.tags.length!==0">
-                        <div class="item" @click="userTagsPopup = !userTagsPopup">
-                            <div class="circular" :style="{'backgroundColor': color}">
-                                <i class="iconfont icon-add"></i>
+            </Group>
+            <!--第一身份-->
+            <Group
+                v-for="(item, index) in tagTypelist"
+                :key="index"
+                class="iconGroup"
+                :gutter="0"
+                title-color="#333"
+                :title="item.name"
+            >
+                <template v-if="item.articleTags && item.articleTags.length!==0">
+                    <!--<scroller lock-y :scrollbar-x=false>-->
+                    <div class="userTags" :ref="'tagType'+index">
+                        <template v-for="(i, ix) in item.articleTags">
+                            <div class="item" @click="routerLink('ArticleList',{tagid: i.id})">
+                                <div class="circular" :style="{'backgroundColor': i.colorcode}">
+                                    <i :class="['iconfont '+ i.iconclass]"></i>
+                                </div>
+                                <p>{{i.name}}</p>
                             </div>
-                            <p>添加</p>
-                        </div>
-                        <template v-for="(item, index) in userTags.tags">
-                            <div class="item" v-if="!userTags['userTags'] && userTags.tags.length!==9 && index === 7"
-                                 @click="toggleMore('userTags')">
+                            <div class="item"
+                                 v-if="!userTags['tagType'+index] && item.articleTags.length!==10 && ix === 8"
+                                 @click="toggleMore('tagType'+index)">
                                 <div class="circular" :style="{'backgroundColor': color}">
                                     <i class="iconfont icon-more"></i>
                                 </div>
                                 <p>查看更多</p>
                             </div>
-                            <div class="item" @click="routerLink('ArticleList',{tagid: item.id})">
-                                <div class="circular"
-                                     :style="{'backgroundColor': item.colorcode}">
-                                    <i :class="['iconfont '+ item.iconclass]"></i>
-                                </div>
-                                <p>{{item.name}}</p>
-                            </div>
                         </template>
-                        <div class="item" v-if="userTags['userTags']" @click="toggleMore('userTags')">
+                        <div class="item" v-if="userTags['tagType'+index]" @click="toggleMore('tagType'+index)">
                             <div class="circular" :style="{'backgroundColor': color}">
                                 <i class="iconfont icon-triangleupfill"></i>
                             </div>
                             <p>收起</p>
                         </div>
-                    </template>
-                    <template v-else>
-                        <div class="item" @click="userTagsPopup = !userTagsPopup">
-                            <div class="circular" :style="{'backgroundColor': color}">
-                                <i class="iconfont icon-add"></i>
-                            </div>
-                            <p>添加</p>
-                        </div>
-                    </template>
-                </div>
-            </template>
-        </Group>
-        <Group></Group>
-        <sticky ref="sticky" :check-sticky-support="true">
-            <tab :line-width=2 active-color="#07b2f6">
-                <tab-item @on-item-click="ajaxLoadArticlelistByclickType(1, false)" :selected="tabItemIndex === 1">最新文章
-                </tab-item>
-                <tab-item @on-item-click="ajaxLoadArticlelistByclickType(2, false)" :selected="tabItemIndex === 2">个人上传
-                </tab-item>
-                <tab-item @on-item-click="ajaxLoadArticlelistByclickType(3, false)" :selected="tabItemIndex === 3">社区上传
-                </tab-item>
-            </tab>
-        </sticky>
-        <div class="list">
-            <DmPanel
-                v-for="(item, index) in list"
-                :key="index"
-                class="article"
-                :class="['dm__panel', 'article', 'dm-border-b']"
-                headWidth='75px'
-                headHeight="60px"
-                :lineClamp=2
-                :img="item.imgSrc"
-                :title='item.title'
-                @click.native="routerLink('Article',{articleid: item.id}, {title: item.title})"
+                    </div>
+                </template>
+                <template v-else>
+                    <box gap="15px">
+                        <divider>暂时没有数据</divider>
+                    </box>
+                </template>
+            </Group>
+            <!--第二身份-->
+            <Group
+                class="iconGroup"
+                :gutter="0"
+                title-color="#333"
+                :title="userTags.name ? userTags.name : ''"
             >
-                {{item.shortcontent}}
-                <div slot="other" class="util">
-                    <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}</div>
-                    <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}</div>
-                    <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}</div>
+                <template>
+                    <div class="userTags" ref="userTags">
+                        <template v-if="userTags.tags && userTags.tags.length!==0">
+                            <div class="item" @click="userTagsPopup = !userTagsPopup">
+                                <div class="circular" :style="{'backgroundColor': color}">
+                                    <i class="iconfont icon-add"></i>
+                                </div>
+                                <p>添加</p>
+                            </div>
+                            <template v-for="(item, index) in userTags.tags">
+                                <div class="item"
+                                     v-if="!userTags['userTags'] && userTags.tags.length!==9 && index === 8"
+                                     @click="toggleMore('userTags')">
+                                    <div class="circular" :style="{'backgroundColor': color}">
+                                        <i class="iconfont icon-more"></i>
+                                    </div>
+                                    <p>查看更多</p>
+                                </div>
+                                <div class="item" @click="routerLink('ArticleList',{tagid: item.id})">
+                                    <div class="circular"
+                                         :style="{'backgroundColor': item.colorcode}">
+                                        <i :class="['iconfont '+ item.iconclass]"></i>
+                                    </div>
+                                    <p>{{item.name}}</p>
+                                </div>
+                            </template>
+                            <div class="item" v-if="userTags['userTags']" @click="toggleMore('userTags')">
+                                <div class="circular" :style="{'backgroundColor': color}">
+                                    <i class="iconfont icon-triangleupfill"></i>
+                                </div>
+                                <p>收起</p>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="item" @click="userTagsPopup = !userTagsPopup">
+                                <div class="circular" :style="{'backgroundColor': color}">
+                                    <i class="iconfont icon-add"></i>
+                                </div>
+                                <p>添加</p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </Group>
+            <Group></Group>
+            <sticky ref="sticky" :check-sticky-support="true">
+                <tab :line-width=2 active-color="#07b2f6">
+                    <tab-item @on-item-click="ajaxLoadArticlelistByclickType(1, false)" :selected="tabItemIndex === 1">
+                        最新文章
+                    </tab-item>
+                    <tab-item @on-item-click="ajaxLoadArticlelistByclickType(2, false)" :selected="tabItemIndex === 2">
+                        个人上传
+                    </tab-item>
+                    <tab-item @on-item-click="ajaxLoadArticlelistByclickType(3, false)" :selected="tabItemIndex === 3">
+                        社区上传
+                    </tab-item>
+                </tab>
+            </sticky>
+            <div class="list">
+                <template v-for="(item, index) in list">
+                    <swipeout>
+                        <swipeout-item
+                            transition-mode="follow"
+                        >
+                            <div slot="right-menu">
+                                <!--<swipeout-button style="border-radius: 100%;overflow:hidden;width: 70px;height: 70px;margin-top: calc(15vw - 35px);margin-left:5px" @click.native="onButtonClick('fav')" type="primary">收藏-->
+                                <!--</swipeout-button>-->
+                                <swipeout-button :type="item.iscommend ? 'warn' : 'primary'"
+                                                 @click.native="commend(index, 'list')">
+                                    <template v-if="item.iscommend">
+                                        <i class="iconfont icon-likefill"></i> 已推荐
+                                    </template>
+                                    <template v-else="item.iscommend">
+                                        <i class="iconfont icon-like"></i> 推荐
+                                    </template>
+                                </swipeout-button>
+                            </div>
+                            <template slot="content">
+                                <DmPanel
+                                    class="article"
+                                    :class="['dm__panel', 'article', 'dm-border-b']"
+                                    headWidth='75px'
+                                    headHeight="60px"
+                                    :lineClamp=2
+                                    :img="item.imgSrc"
+                                    :title='item.title'
+                                    @click.native="routerLink('Article',{articleid: item.id})"
+                                >
+                                    {{item.shortcontent}}
+                                    <div slot="other" class="util">
+                                        <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}</div>
+                                        <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}</div>
+                                        <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}</div>
+                                    </div>
+                                </DmPanel>
+                            </template>
+                        </swipeout-item>
+                    </swipeout>
+                </template>
+                <div style="text-align: center;margin: 15px;" v-if="pageNo < pageCount - 1">
+                    <spinner type="android" size="45px"></spinner>
                 </div>
-            </DmPanel>
+                <box gap="15px" v-if="!loadding && (pageNo >= pageCount - 1)">
+                    <divider>没有更多数据</divider>
+                </box>
 
-            <div style="text-align: center;margin: 15px;" v-if="pageNo < pageCount - 1">
-                <spinner type="android" size="45px"></spinner>
             </div>
-            <box gap="15px" v-if="!loadding && (pageNo >= pageCount - 1)">
-                <divider>没有更多数据</divider>
-            </box>
+            <!--立即分享 dialog-->
+            <x-dialog
+                class="articleDialog"
+                v-model="articelDialogShow"
+                :hide-on-blur="true"
+            >
 
-        </div>
-
-        <!--立即分享 dialog-->
-        <x-dialog
-            class="articleDialog"
-            v-model="articelDialogShow"
-            :hide-on-blur="true"
-        >
-
-            <div class="head" :style="{'backgroundImage': 'url('+dialog.imgSrc +')'}">
-                <div class="mask"></div>
-                <i @click="articelDialogShow = !articelDialogShow" class="iconfont icon-close"></i>
-                <div class="head_bd">
-                    <h3 class="title">{{dialog.title}}</h3>
-                    <div class="desc">{{dialog.shortcontent}}</div>
+                <div class="head" :style="{'backgroundImage': 'url('+dialog.imgSrc +')'}">
+                    <div class="mask"></div>
+                    <i @click="articelDialogShow = !articelDialogShow" class="iconfont icon-close"></i>
+                    <div class="head_bd">
+                        <h3 class="title">{{dialog.title}}</h3>
+                        <div class="desc">{{dialog.shortcontent}}</div>
+                    </div>
                 </div>
-            </div>
-            <div class="content">
-                <p class="recommendation">推荐话术</p>
-                <p class="desc">{{dialog.description}}</p>
-            </div>
-            <box gap="10px 15px">
-                <x-button
-                    :link="'/article/' + dialog.id + '?title' + dialog.title"
-                    style="height: 35px;line-height: 35px; font-size: 14px;"
-                    :gradients="['#1D62F0', '#19D5FD']"
-                >立即分享
-                </x-button>
-            </box>
-        </x-dialog>
-        <!--第二身份选择-->
-        <div v-transfer-dom>
-            <popup
-                style="max-height: 60%"
-                v-model="userTagsPopup">
-                <popup-header
-                    right-text="确定"
-                    title="添加/删除第二身份"
-                    :show-bottom-border="false"
-                    @on-click-right="userTagsPopup = !userTagsPopup"
-                ></popup-header>
-                <div style="overflow: scroll;-webkit-overflow-scrolling: touch;">
-                    <checklist
-                        label-position="left"
-                        :options="userTagsCheckList"
-                        v-model="userTagsCheck" @on-change="change"
-                        style="margin-top:0"
-                    ></checklist>
+                <div class="content">
+                    <p class="recommendation">推荐话术</p>
+                    <p class="desc">{{dialog.description}}</p>
                 </div>
-            </popup>
-        </div>
+                <box gap="10px 15px">
+                    <x-button
+                        :link="'/article/' + dialog.id"
+                        style="height: 35px;line-height: 35px; font-size: 14px;"
+                        :gradients="['#1D62F0', '#19D5FD']"
+                    >立即分享
+                    </x-button>
+                </box>
+            </x-dialog>
+            <!--第二身份选择-->
+            <div v-transfer-dom>
+                <popup
+                    style="height: 60%;"
+                    v-model="userTagsPopup">
+                    <popup-header
+                        right-text="确定"
+                        title="添加/删除第二身份"
+                        :show-bottom-border="false"
+                        @on-click-right="userTagsPopup = !userTagsPopup"
+                    ></popup-header>
+                    <div style="height: calc(100% - 44px);overflow: auto;-webkit-overflow-scrolling : touch;">
+                        <checklist
+                            label-position="left"
+                            :options="userTagsCheckList"
+                            v-model="userTagsCheck" @on-change="change"
+                            style="margin-top:0"
+                        ></checklist>
+                    </div>
+                </popup>
+            </div>
+        </template>
     </div>
 </template>
 <script>
@@ -279,9 +330,13 @@
         Popup,
         Checklist,
         PopupHeader,
-        TransferDomDirective as TransferDom
+        TransferDomDirective as TransferDom,
+        Swipeout,
+        SwipeoutItem,
+        SwipeoutButton
     } from 'vux'
     import DmPanel from '@/components/Dcomponents/DmPanel.vue'
+    import DmLoading from '@/components/Dcomponents/DmLoading/index.vue'
     import UtilMixin from '@/mixins/UtilMixin.vue'
 
     export default {
@@ -291,6 +346,7 @@
         mixins: [UtilMixin],
         data() {
             return {
+                loading: true,
                 articelDialogShow: false,
                 dialog: {
                     id: null,
@@ -333,7 +389,11 @@
             Divider,
             Popup,
             Checklist,
-            PopupHeader
+            PopupHeader,
+            DmLoading,
+            Swipeout,
+            SwipeoutItem,
+            SwipeoutButton
         },
         computed: {},
         methods: {
@@ -344,7 +404,25 @@
                 this.$nextTick(() => {
                     this.$refs.sticky.bindSticky()
                 })
-                this.ajaxSelectAllSecordIdentity()
+                await this.ajaxSelectAllSecordIdentity()
+                this.loading = false
+            },
+            // 收藏/取消收藏
+            commend(index, list) {
+                const id = this[list][index].id
+                const iscommend = this[list][index].iscommend
+                this.$axios.post({
+                    url: '/agent/article/services/commendByid',
+                    data: {
+                        id,
+                        iscommend: iscommend ? 0 : 1
+                    }
+                }).then(res => {
+                    this[list][index].iscommend = iscommend ? 0 : 1
+                    this.$vux.toast.show({
+                        text: iscommend ? '取消推荐' : '已推荐'
+                    })
+                })
             },
             // 获取每日推荐 第一身份
             ajaArticleClassification() {
@@ -366,16 +444,19 @@
             },
             // 获取可选择的第二身份
             ajaxSelectAllSecordIdentity() {
-                this.$axios.post({
-                    url: '/agent/article/services/selectAllSecordIdentity'
-                }).then((result) => {
-                    result.map(item => {
-                        let _item = item
-                        _item.key = item.id
-                        _item.value = item.name
-                        return _item
+                return new Promise((resolve, reject) => {
+                    this.$axios.post({
+                        url: '/agent/article/services/selectAllSecordIdentity'
+                    }).then((result) => {
+                        resolve(result)
+                        result.map(item => {
+                            let _item = item
+                            _item.key = item.id
+                            _item.value = item.name
+                            return _item
+                        })
+                        this.userTagsCheckList = result
                     })
-                    this.userTagsCheckList = result
                 })
             },
             // 获取最新文章 个人上传 社区上传

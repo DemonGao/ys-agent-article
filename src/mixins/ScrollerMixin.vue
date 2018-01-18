@@ -20,7 +20,7 @@ ScrollerMixin 上拉刷新 下拉加载使用指南
                 pageNo: 0,
                 pageSize: 10,
                 pageCount: 1,
-                isInit: true,
+                isInit: false,
                 isDeactivated: true
             }
         },

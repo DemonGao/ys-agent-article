@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import {querystring, TransferDom, Loading, ViewBox, Tabbar, TabbarItem} from 'vux'
+    import {querystring, TransferDomDirective as TransferDom, Loading, ViewBox, Tabbar, TabbarItem} from 'vux'
     import {mapState, mapActions} from 'vuex'
 
     export default {
@@ -255,7 +255,12 @@
             }
         }
     }
-
+    .vux-loading{
+        .weui-toast {
+            top: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
     .vux-pop-out-enter-active,
     .vux-pop-out-leave-active,
     .vux-pop-in-enter-active,

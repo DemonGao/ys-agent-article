@@ -31,6 +31,7 @@
             .dmPanel__hd__img {
                 width: 100%;
                 height: 100%;
+                line-height: 0;
                 img {
                     width: 100%;
                     height: 100%;

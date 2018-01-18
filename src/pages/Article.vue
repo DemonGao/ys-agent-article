@@ -1,99 +1,111 @@
 <template>
     <div class="article">
-        <h1 class="article__hd">{{articleDetail.title}}</h1>
-        <div class="time"
-             style="padding:5px 15px;font-size: 12px;color: #969696;margin: -8px 0;background-color: #ffffff;">
-            {{timeAgoHasHourAndMinute(articleDetail.publishtime)}}
-        </div>
-        <div class="article__bd" v-html="articleDetail.content"></div>
-        <div class="article__ft">
-            <div class="thumbsUp">
-                <box gap="0 0 8px 0">
-                    <x-button v-if="!userthumbsupcount" type="warn" @click.native="onThumbsUp(0)">
-                        点赞（{{thumbsupcount}}）
-                    </x-button>
-                    <x-button v-else="!userthumbsupcount" type="default" @click.native="onThumbsUp(1)">已赞（{{thumbsupcount}}）</x-button>
-                </box>
+        <DmLoading v-if="loading" img="/static/common/img/loadingImg.png"></DmLoading>
+        <template v-else>
+            <h1 class="article__hd">{{articleDetail.title}}</h1>
+            <div class="time"
+                 style="padding:5px 15px;font-size: 12px;color: #969696;margin: -8px 0;background-color: #ffffff;">
+                {{timeAgoHasHourAndMinute(articleDetail.publishtime)}}
             </div>
-            <div class="thumbsUpList" v-if="ThumbsUpUser.length!==0">
-                <template v-for="(item, index) in ThumbsUpUser">
-                    <div class="item">
-                        <img :src="item.headurl">
-                    </div>
-                </template>
-            </div>
-            <p class="readNum">
-                <span class="left">阅读 {{readcount}}</span>
-                <span class="right">投诉</span>
-            </p>
-        </div>
-        <div class="utils">
-            <div class="thumbsUpBox">
-                <divider>评论</divider>
-                <p class="" style="overflow: hidden">
-                    <span style="float: right;margin-right: 20px;font-size: 12px;color: #3a99f7;"
-                          @click="onWriteComment">写评论 <i class="iconfont icon-writefill"></i></span>
-                </p>
-                <div style="width: 100%;margin-top: 5px;">
-                    <template>
-                        <dm-panel
-                            v-for="(item,index) in list" :key="index"
-                            :class="['dm__panel', 'dm__panel__bg']"
-                            :title="item.nickname"
-                            :img="item.commentheadurl"
-                        >
-                            {{item.content}}
-                            <div slot="footer">
-                                <dm-comment
-                                    :id="item.commentid"
-                                    :index="index"
-                                    :hasThumbsUp="false"
-                                    :commentList="item.articlecommentReplyList"
-                                    :dateTime="timeAgoHasHourAndMinute(item.createtime)"
-                                    @comment="commentMethod"
-                                    @reply="replyMethod"
-                                ></dm-comment>
-                            </div>
-                        </dm-panel>
-                    </template>
-                    <div style="text-align: center;margin: 15px;" v-if="this.loadding">
-                        <spinner type="android" size="45px"></spinner>
-                    </div>
-                    <template v-if="list.length===0">
-                        <box gap="15px" style="text-align: center;font-size: 12px;color: #969696;">
-                            暂时还没有评论,快来抢沙发吧~
-                        </box>
-                    </template>
-                    <box gap="15px" v-if="!this.loadding && (this.pageNo >= this.pageCount - 1) && list.length!==0">
-                        <divider>没有更多数据</divider>
+            <div class="article__bd" v-html="articleDetail.content"></div>
+            <div class="article__ft">
+                <div class="thumbsUp">
+                    <box gap="0 0 8px 0">
+                        <x-button v-if="!userthumbsupcount" type="warn" @click.native="onThumbsUp(0)">
+                            点赞（{{thumbsupcount}}）
+                        </x-button>
+                        <x-button v-else="!userthumbsupcount" type="default" @click.native="onThumbsUp(1)">已赞（{{thumbsupcount}}）</x-button>
                     </box>
                 </div>
+                <div class="thumbsUpList" v-if="ThumbsUpUser.length!==0">
+                    <template v-for="(item, index) in ThumbsUpUser">
+                        <div class="item">
+                            <img :src="item.headurl">
+                        </div>
+                    </template>
+                </div>
+                <p class="readNum">
+                    <span class="left">阅读 {{readcount}}</span>
+                    <span class="right">投诉</span>
+                </p>
             </div>
-        </div>
+            <!--自定义组件-->
+            <custom-component
+                :pageId="1"
+            ></custom-component>
 
-        <!--评论模态框-->
-        <div v-transfer-dom>
-            <confirm class="dm-modal dm-modal-textarea" v-model="commentModal.show"
-                     confirm-text="提交"
-                     cancel-text="关闭"
-                     :title="commentModal.title"
-                     :close-on-confirm="false"
-                     @on-cancel="commentModal_onCancel"
-                     @on-confirm="commentModal_onConfirm"
-                     @on-show="commentModal_onShow"
-                     @on-hide="commentModal_onHide">
-                <group :gutter="0">
-                    <x-textarea v-model="commentModal.text" placeholder="请输入你想填写的内容" :height="80" :show-counter="true"
-                                :max="100"></x-textarea>
-                </group>
-            </confirm>
-        </div>
+            <div class="utils">
+                <div class="thumbsUpBox">
+                    <divider>评论</divider>
+                    <p class="" style="overflow: hidden">
+                    <span style="float: right;margin-right: 20px;font-size: 12px;color: #3a99f7;"
+                          @click="onWriteComment">写评论 <i class="iconfont icon-writefill"></i></span>
+                    </p>
+                    <div style="width: 100%;margin-top: 5px;">
+                        <template>
+                            <dm-panel
+                                v-for="(item,index) in list" :key="index"
+                                :class="['dm__panel', 'dm__panel__bg']"
+                                :title="item.nickname"
+                                :img="item.commentheadurl"
+                            >
+                                {{item.content}}
+                                <div slot="footer">
+                                    <dm-comment
+                                        :id="item.commentid"
+                                        :index="index"
+                                        :hasThumbsUp="false"
+                                        :commentList="item.articlecommentReplyList"
+                                        :dateTime="timeAgoHasHourAndMinute(item.createtime)"
+                                        @comment="commentMethod"
+                                        @reply="replyMethod"
+                                    ></dm-comment>
+                                </div>
+                            </dm-panel>
+                        </template>
+                        <div style="text-align: center;margin: 15px;" v-if="this.loadding">
+                            <spinner type="android" size="45px"></spinner>
+                        </div>
+                        <template v-if="list.length===0">
+                            <box gap="15px" style="text-align: center;font-size: 12px;color: #969696;">
+                                暂时还没有评论,快来抢沙发吧~
+                            </box>
+                        </template>
+                        <box gap="15px" v-if="!this.loadding && (this.pageNo >= this.pageCount - 1) && list.length!==0">
+                            <divider>没有更多数据</divider>
+                        </box>
+                    </div>
+                </div>
+            </div>
+
+            <!--评论模态框-->
+            <div v-transfer-dom>
+                <confirm class="dm-modal dm-modal-textarea" v-model="commentModal.show"
+                         confirm-text="提交"
+                         cancel-text="关闭"
+                         :title="commentModal.title"
+                         :close-on-confirm="false"
+                         @on-cancel="commentModal_onCancel"
+                         @on-confirm="commentModal_onConfirm"
+                         @on-show="commentModal_onShow"
+                         @on-hide="commentModal_onHide">
+                    <group :gutter="0">
+                        <x-textarea v-model="commentModal.text" placeholder="请输入你想填写的内容" :height="80"
+                                    :show-counter="true"
+                                    :max="100"></x-textarea>
+                    </group>
+                </confirm>
+            </div>
+        </template>
     </div>
 </template>
 
 <script>
     import DmPanel from '@/components/Dcomponents/DmPanel.vue'
+    import CustomComponent from '@/components/YsComponents/CustomComponent.vue'
+
     import DmComment from '@/components/Dcomponents/DmComment.vue'
+    import DmLoading from '@/components/Dcomponents/DmLoading/index.vue'
     import UtilMixin from '@/mixins/UtilMixin.vue'
     import CommentMixin from '@/mixins/CommentMixin.vue'
     import WxShareMixin from '@/mixins/WxShareMixin.vue'
@@ -107,6 +119,7 @@
         props: ['articleid'],
         data() {
             return {
+                loading: true,
                 delThumbsUpUser: null,
                 articleDetail: {
                     id: null,
@@ -126,7 +139,8 @@
                 thumbsupcount: null,
                 userthumbsupcount: null,
                 shortcontent: '',
-                shareuserid: null
+                shareuserid: null,
+                customComponents: window.YS_CUSTOMCOMPONENT_LIST
             }
         },
         components: {
@@ -137,7 +151,9 @@
             DmComment,
             Confirm,
             XTextarea,
-            Group
+            Group,
+            DmLoading,
+            CustomComponent
         },
         computed: {},
         methods: {
@@ -323,7 +339,8 @@
                     fn: this.ajaxCallBackArticleShared
                 })
             })
-            this.ajaxLoadArticleCommentList(false)
+            await this.ajaxLoadArticleCommentList(false)
+            this.loading = false
         },
         async mounted() {
             window.addEventListener('scroll', () => {

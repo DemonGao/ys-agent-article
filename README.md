@@ -1,30 +1,14 @@
-# d1money-web-enterprise-wechat
+> 组件介绍
 
-> A Vue.js project
 
-## Build Setup
+components
+* Dcomponents (Demongao组件)
+    * DmLoading 页面loadding组件
+* YsComponents (燕梳云组件)
+    * CustomComponent 自定义组件
+        * FpCard 个人名片组件
+        * ArticleCell 文章列表组件
+        * CurriculumCell 课程列表组件
+        * VideoCell 视频列表组件
+        * FpEwm 代理人二维码组件
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
