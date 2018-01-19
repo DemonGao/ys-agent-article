@@ -1,6 +1,6 @@
 <style lang="less" rel="stylesheet/less" scoped="scoped">
     .articleCell {
-        padding: 15px;
+        padding: 10px 15px;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
@@ -46,18 +46,17 @@
             }
         }
         .articleCell__right {
-            width: 35%;
+            width: 30%;
             margin-left: 10px;
             .img {
                 width: 100%;
-                height: 100%;
-                min-height: 70px;
+                height: 70px;
                 line-height: 0;
                 img {
                     width: 100%;
                     height: 100%;
-                    min-height: 80px;
                     object-fit: cover;
+                    border-radius: 2px;
                 }
             }
         }

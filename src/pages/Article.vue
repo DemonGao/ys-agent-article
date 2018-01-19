@@ -2,10 +2,11 @@
     <div class="article">
         <DmLoading v-if="loading" img="/static/common/img/loadingImg.png"></DmLoading>
         <template v-else>
-            <h1 class="article__hd">{{articleDetail.title}}</h1>
+            <h1 class="article__hd" style="padding-top: 25px;">{{articleDetail.title}}</h1>
             <div class="time"
-                 style="padding:5px 15px;font-size: 12px;color: #969696;margin: -8px 0;background-color: #ffffff;">
-                {{timeAgoHasHourAndMinute(articleDetail.publishtime)}}
+                 style="padding:5px 15px 10px 15px; font-size: 13px;color: #8C8C8C;margin: -8px 0 0px 0;background-color: #ffffff;line-height: 16px;">
+                <span style="border: solid #8c8c8c 1px; display: inline-block; border-radius: 20px; padding: 0px 7px; margin-right: 5px; font-size: 12px;">原创</span>
+                <span>{{timeAgoHasHourAndMinute(articleDetail.publishtime)}}</span>
             </div>
             <div class="article__bd" v-html="articleDetail.content"></div>
             <div class="article__ft">
@@ -36,7 +37,7 @@
 
             <div class="utils">
                 <div class="thumbsUpBox">
-                    <divider>评论</divider>
+                    <divider>精选评论</divider>
                     <p class="" style="overflow: hidden">
                     <span style="float: right;margin-right: 20px;font-size: 12px;color: #3a99f7;"
                           @click="onWriteComment">写评论 <i class="iconfont icon-writefill"></i></span>

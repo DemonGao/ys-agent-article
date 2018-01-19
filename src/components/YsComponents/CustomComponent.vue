@@ -3,6 +3,24 @@
         & > div {
             margin-top: 15px;
         }
+
+        .headTitle {
+            margin: 0 15px 5px;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+            padding-left: 10px;
+            &:before {
+                content: '';
+                top: 3px;
+                bottom: 3px;
+                left: 0;
+                width: 2px;
+                position: absolute;
+                background-color: #4aa1f0;
+                border-radius: 2px;
+            }
+        }
         /*理财师名片*/
         .fpCard {
             .realname {
@@ -15,40 +33,24 @@
             }
             .tel, .ewm {
                 display: inline-block;
-                width: 100%;
                 text-align: center;
+                padding: 5px;
             }
             .tel {
                 i.iconfont {
-                    font-size: 23px;
+                    font-size: 20px;
                     color: #4aa1f0;
                 }
             }
             .ewm {
                 i.iconfont {
-                    font-size: 20px;
+                    font-size: 21px;
                     color: #09bb07;
                 }
             }
         }
         /*文章列表*/
         .articleCellBox, .videoCellBox {
-            .headTitle {
-                margin: 0 15px 5px;
-                font-size: 16px;
-                color: #666;
-                position: relative;
-                padding-left: 10px;
-                &:before {
-                    content: '';
-                    top: 3px;
-                    bottom: 3px;
-                    left: 0;
-                    width: 2px;
-                    position: absolute;
-                    background-color: #4aa1f0;
-                }
-            }
             .title {
                 font-size: 14px;
                 line-height: 22px;
@@ -65,17 +67,26 @@
             }
 
         }
+        .activityCellBox, .productCellBox {
+            background: #FFFFFF;
+            padding: 10px 15px;
+        }
         /*微信二维码*/
         .wxewm {
-            margin: 15px;
             box-sizing: border-box;
-            border-radius: 10px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px -6px #000;
+            /*border-radius: 10px;*/
+            /*background-color: #ffffff;*/
+            /*box-shadow: 0 0 10px -6px #000;*/
+            background: #FFFFFF;
             .img {
-                padding: 15px;
+                display: block;
+                margin: 0 auto;
+                padding: 10px 15px;
                 img {
+                    display: block;
+                    margin: 0 auto;
                     max-width: 100%;
+                    border-radius: 2px;
                 }
             }
         }
@@ -112,14 +123,24 @@
                         </a>
                     </template>
                 </fp-card>
+                <!--预览二维码-->
+                <x-dialog
+                    v-model="wxewmPopup"
+                    :hide-on-blur="true"
+                    class="wxewmPopup"
+                >
+                    <div class="content">
+                        <img width="100%" :src="fpCard.wx_ewm" alt="二维码加载失败">
+                    </div>
+                </x-dialog>
             </template>
             <!--推荐文章列表-->
             <template v-if="item === 'articleList' && articleList && articleList.length !== 0">
                 <div class="articleCellBox">
-                    <p class="headTitle">推荐文章</p>
+                    <p class="headTitle">文章推荐</p>
                     <article-cell
                         v-for="(item, index) in articleList" :key="'articleCell' + index"
-                        :url="host + '/agent/article/index#/article/' + item.id"
+                        :url="host + '/agent/article/index?id='+item.id+'#/article/' + item.id"
                         :img="item.imgSrc"
                         class="cellItem"
                     >
@@ -137,10 +158,10 @@
             <!--视频列表-->
             <template v-if="item === 'videoList' && videoList && videoList.length !== 0">
                 <div class="videoCellBox">
-                    <p class="headTitle">热门视频</p>
+                    <p class="headTitle">视频推荐</p>
                     <video-cell
                         v-for="(item, index) in articleList" :key="'articleCell' + index"
-                        :url="host + '/agent/video/index#/video-detail/' + item.id"
+                        :url="host + '/agent/video/index?id='+item.id+'#/video-detail/' + item.id"
                         :img="item.imgSrc"
                     >
                         <div class="title" slot="title">
@@ -157,44 +178,42 @@
             </template>
             <!--活动列表-->
             <template v-if="item === 'activityList' && activityList && activityList.length !== 0">
-                <div class="activityCellBox">
-                    <activity-cell
-                        v-for="(item, index) in activityList" :key="index"
-                        :params="item"
-                        :url="'/agent/activity/index#/activityDetail/' + item.id"
-                    >
-                    </activity-cell>
+                <div>
+                    <p class="headTitle">活动推荐</p>
+                    <div class="activityCellBox">
+                        <activity-cell
+                            v-for="(item, index) in activityList" :key="index"
+                            :params="item"
+                            :url="'/agent/activity/index?id='+item.id+'#/activityIframe/' + item.id"
+                        >
+                        </activity-cell>
+                    </div>
                 </div>
             </template>
             <!--产品列表-->
             <template v-if="item === 'productList' && productList && productList.length !== 0">
-                <div class="productCellBox">
-                    <product-cell
-                        v-for="(item, index) in productList" :key="index"
-                        :params="item"
-                        :url="'/agent/product/index#/productDetail/' + item.id"
-                    >
-                    </product-cell>
+                <div>
+                    <p class="headTitle">产品推荐</p>
+                    <div class="productCellBox">
+                        <product-cell
+                            v-for="(item, index) in productList" :key="index"
+                            :params="item"
+                            :url="'/agent/product/index?id='+item.id+'#/productIframe/' + item.id"
+                        >
+                        </product-cell>
+                    </div>
                 </div>
             </template>
             <!--代理人二维码-->
             <template v-if="item === 'fpUserEWM' && fpUserEWM && fpUserEWM.url">
-                <div class="wxewm">
-                    <div class="img">
-                        <img :src="fpUserEWM.url" alt="">
-                        <p style="color: #000;text-align: center;color: #969696;">扫描上方二维码加我微信好友</p>
+                <div>
+                    <p class="headTitle">长按识别下方二维码加我微信好友</p>
+                    <div class="wxewm">
+                        <div class="img">
+                            <img :src="fpUserEWM.url" alt="二维码加载失败">
+                        </div>
                     </div>
                 </div>
-                <!--预览二维码-->
-                <x-dialog
-                    v-model="wxewmPopup"
-                    :hide-on-blur="true"
-                    class="wxewmPopup"
-                >
-                    <div class="content">
-                        <img width="100%" :src="fpCard.wx_ewm" alt="二维码加载失败">
-                    </div>
-                </x-dialog>
             </template>
         </template>
     </div>
@@ -244,7 +263,7 @@
         computed: {},
         methods: {},
         mounted() {
-            if (window.YS_CUSTOMCOMPONENT_LIST[this.pageId] !== null){
+            if (window.YS_CUSTOMCOMPONENT_LIST[this.pageId] !== null) {
                 this.sort = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].sort ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].sort : []
                 this.articleList = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].articleList ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].articleList : []
                 this.videoList = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].videoList ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].videoList : []

@@ -36,6 +36,7 @@
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
+                    border-radius: 2px;
                 }
             }
         }
@@ -43,7 +44,7 @@
         .dmPanel__bd {
             flex: 1;
             .dmPanel__bd__title {
-                font-size: 18px;
+                font-size: 15px;
                 color: #333333;
                 font-weight: 500;
                 margin-bottom: 2px;

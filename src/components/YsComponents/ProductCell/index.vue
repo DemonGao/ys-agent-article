@@ -18,7 +18,7 @@
                 <span class="time">{{params.subtitle}}</span>
             </div>
             <div class="product__content__datas">
-                <span><i class="iconfont icon-we"></i> {{params.totalbuycount}}</span>
+                <span><i class="iconfont icon-we"></i> {{params.totalbuytcount}}</span>
                 <span><i class="iconfont icon-forward"></i> {{params.totalsharecount}}</span>
                 <span><i class="iconfont icon-attention"></i> {{params.totalreadcount}}</span>
             </div>

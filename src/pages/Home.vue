@@ -270,7 +270,7 @@
                 :hide-on-blur="true"
             >
 
-                <div class="head" :style="{'backgroundImage': 'url('+dialog.imgSrc +')'}">
+                <div class="head" :style="{'backgroundImage': 'url('+dialog.imgSrc +')', padding: '55px 35px', backgroundPosition: 'center'}">
                     <div class="mask"></div>
                     <i @click="articelDialogShow = !articelDialogShow" class="iconfont icon-close"></i>
                     <div class="head_bd">
