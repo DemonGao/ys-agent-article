@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "clipboard": "^1.7.1",
     "es6-promise": "^4.1.1",
     "fastclick": "^1.0.6",
     "jsonp": "^0.2.1",
     "mockjs": "^1.0.1-beta3",
     "vue": "^2.2.2",
+    "vue-clipboard2": "^0.0.8",
     "vue-router": "^2.2.0",
     "vue-scroller": "^2.2.4",
     "vue2-animate": "^1.0.4",

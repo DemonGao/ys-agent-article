@@ -1,6 +1,6 @@
 .article {
     .util {
-        flex:1;
+        flex: 1;
         display: flex;
         flex-flow: nowrap row;
         justify-content: flex-end;
@@ -20,8 +20,8 @@
 
         }
     }
-    .article__bd{
-        img{
+    .article__bd {
+        img {
             max-width: 100%;
         }
     }
@@ -41,16 +41,16 @@
         background-size: cover;
         color: #fff;
         position: relative;
-        .mask{
+        .mask {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0,0,0,.5);
-            z-index:1;
+            background-color: rgba(0, 0, 0, .5);
+            z-index: 1;
         }
-        i.iconfont.icon-close{
+        i.iconfont.icon-close {
             position: absolute;
             top: 5px;
             right: 10px;
@@ -58,9 +58,9 @@
             font-size: 14px;
             color: #fff;
         }
-        .head_bd{
+        .head_bd {
             position: relative;
-            z-index:2;
+            z-index: 2;
             .title {
                 font-size: 16px;
             }
@@ -77,7 +77,7 @@
         }
     }
     .content {
-        padding: 10px 15px 15px;
+        padding: 10px 15px 0px;
         text-align: left;
         .recommendation {
             font-size: 12px;
@@ -85,6 +85,26 @@
         }
         .desc {
             font-size: 14px;
+            -webkit-touch-callout: default;
+            -webkit-user-select: auto;
+            -khtml-user-select: auto;
+            -moz-user-select: all;
+            -ms-user-select: all;
+            user-select: all;
+            textarea {
+                width: 100%;
+                border: none;
+                resize: none;
+                -webkit-touch-callout: default;
+                -webkit-user-select: all;
+                -khtml-user-select: all;
+                -moz-user-select: all;
+                -ms-user-select: all;
+                user-select: all;
+                &:disabled {
+                    background-color: transparent;
+                }
+            }
         }
 
     }

@@ -215,11 +215,25 @@
                     </div>
                 </div>
             </template>
+            <!--视频名片-->
+            <template v-if="item === 'videoCard' && videoCard">
+                <div>
+                    <p class="headTitle">视频名片</p>
+                    <video-card
+                        style="padding: 10px 15px;box-sizing: border-box;background-color: #ffffff;"
+                        :file_id="videoCard && videoCard.fileid"
+                        :app_id="app_id"
+                        width="100%"
+                        height="auto"
+                    ></video-card>
+                </div>
+            </template>
         </template>
     </div>
 </template>
 
 <script>
+    import VideoCard from '@/components/YsComponents/VideoCard'
     import UtilMixin from '@/mixins/UtilMixin.vue'
     import ArticleCell from '@/components/YsComponents/ArticleCell'
     import ActivityCell from '@/components/YsComponents/ActivityCell'
@@ -242,6 +256,7 @@
         data() {
             return {
                 wxewmPopup: false,
+                app_id: window.YS_TENCENTCLOUD_APPID,
                 host: window.location.origin,
                 sort: null,
                 articleList: null,
@@ -249,7 +264,8 @@
                 activityList: null,
                 productList: null,
                 fpCard: null,
-                fpUserEWM: null
+                fpUserEWM: null,
+                videoCard: null
             }
         },
         components: {
@@ -258,7 +274,8 @@
             FpCard,
             VideoCell,
             ActivityCell,
-            ProductCell
+            ProductCell,
+            VideoCard
         },
         computed: {},
         methods: {},
@@ -271,6 +288,7 @@
                 this.productList = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].productList ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].productList : []
                 this.fpCard = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].fpCard ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].fpCard : null
                 this.fpUserEWM = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].fpUserEWM ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].fpUserEWM : null
+                this.videoCard = window.YS_CUSTOMCOMPONENT_LIST[this.pageId].videoCard ? window.YS_CUSTOMCOMPONENT_LIST[this.pageId].videoCard : null
             }
         }
     }

@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.use(Vuex)
 import {sync} from 'vuex-router-sync'
@@ -64,6 +65,7 @@ Vue.use(ToastPlugin)
 Vue.use(LoadingPlugin)
 Vue.use(VueScroller)
 Vue.use(BusPlugin)
+Vue.use(VueClipboard)
 Vue.prototype.$axios = axiosUtil
 
 // simple history management

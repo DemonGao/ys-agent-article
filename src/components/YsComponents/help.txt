@@ -1,0 +1,1 @@
+如果使用视频名片组件，请将<script src="https://imgcache.qq.com/open/qcloud/video/h5/h5connect.js" charset="utf-8"></script> 放到index.html文件中

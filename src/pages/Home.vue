@@ -247,8 +247,10 @@
                                     {{item.shortcontent}}
                                     <div slot="other" class="util">
                                         <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}</div>
-                                        <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}</div>
-                                        <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}</div>
+                                        <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}
+                                        </div>
+                                        <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}
+                                        </div>
                                     </div>
                                 </DmPanel>
                             </template>
@@ -264,33 +266,38 @@
 
             </div>
             <!--立即分享 dialog-->
-            <x-dialog
-                class="articleDialog"
-                v-model="articelDialogShow"
-                :hide-on-blur="true"
-            >
+            <div v-transfer-dom>
+                <x-dialog
+                    class="articleDialog"
+                    v-model="articelDialogShow"
+                    :hide-on-blur="true"
+                >
 
-                <div class="head" :style="{'backgroundImage': 'url('+dialog.imgSrc +')', padding: '55px 35px', backgroundPosition: 'center'}">
-                    <div class="mask"></div>
-                    <i @click="articelDialogShow = !articelDialogShow" class="iconfont icon-close"></i>
-                    <div class="head_bd">
-                        <h3 class="title">{{dialog.title}}</h3>
-                        <div class="desc">{{dialog.shortcontent}}</div>
+                    <div class="head"
+                         :style="{'backgroundImage': 'url('+dialog.imgSrc +')', padding: '55px 35px', backgroundPosition: 'center'}">
+                        <div class="mask"></div>
+                        <i @click="articelDialogShow = !articelDialogShow" class="iconfont icon-close"></i>
+                        <div class="head_bd">
+                            <h3 class="title">{{dialog.title}}</h3>
+                            <div class="desc">{{dialog.shortcontent}}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="content">
-                    <p class="recommendation">推荐话术</p>
-                    <p class="desc">{{dialog.description}}</p>
-                </div>
-                <box gap="10px 15px">
-                    <x-button
-                        :link="'/article/' + dialog.id"
-                        style="height: 35px;line-height: 35px; font-size: 14px;"
-                        :gradients="['#1D62F0', '#19D5FD']"
-                    >立即分享
-                    </x-button>
-                </box>
-            </x-dialog>
+                    <div class="content">
+                        <p class="recommendation">推荐话术</p>
+                        <p id="description" class="desc">{{dialog.description}}</p>
+                    </div>
+                    <box gap="10px 15px">
+                        <x-button
+                            style="height: 35px;line-height: 35px; font-size: 14px;"
+                            class="copybtn"
+                            data-clipboard-action="copy"
+                            data-clipboard-target="#description"
+                            :gradients="['#1D62F0', '#19D5FD']"
+                        >立即分享
+                        </x-button>
+                    </box>
+                </x-dialog>
+            </div>
             <!--第二身份选择-->
             <div v-transfer-dom>
                 <popup
@@ -315,6 +322,7 @@
         </template>
     </div>
 </template>
+<!--suppress ES6ShorthandObjectProperty -->
 <script>
     import {
         Group,
@@ -333,11 +341,13 @@
         TransferDomDirective as TransferDom,
         Swipeout,
         SwipeoutItem,
-        SwipeoutButton
+        SwipeoutButton,
+        XTextarea
     } from 'vux'
     import DmPanel from '@/components/Dcomponents/DmPanel.vue'
     import DmLoading from '@/components/Dcomponents/DmLoading/index.vue'
     import UtilMixin from '@/mixins/UtilMixin.vue'
+    import Clipboard from 'clipboard'
 
     export default {
         directives: {
@@ -393,18 +403,22 @@
             DmLoading,
             Swipeout,
             SwipeoutItem,
-            SwipeoutButton
+            SwipeoutButton,
+            XTextarea
         },
         computed: {},
         methods: {
             // 页面数据 初始化
             async init() {
-                await this.ajaArticleClassification()
-                await this.ajaxLoadArticlelistByclickType(1, false)
+                await
+                    this.ajaArticleClassification()
+                await
+                    this.ajaxLoadArticlelistByclickType(1, false)
                 this.$nextTick(() => {
                     this.$refs.sticky.bindSticky()
                 })
-                await this.ajaxSelectAllSecordIdentity()
+                await
+                    this.ajaxSelectAllSecordIdentity()
                 this.loading = false
             },
             // 收藏/取消收藏
@@ -547,6 +561,21 @@
             this.init()
         },
         async mounted() {
+            let clipboard = new Clipboard('.copybtn')
+            const _this = this
+            clipboard.on('success', function (e) {
+                e.clearSelection()
+                _this.$vux.toast.show({
+                    text: '推荐话术已复制',
+                    time: 500,
+                    onHide() {
+                        _this.routerLink('Article', {articleid: _this.dialog.id})
+                    }
+                })
+            })
+            clipboard.on('error', function (e) {
+                _this.routerLink('Article', {articleid: _this.dialog.id})
+            })
             const divscroll = document.getElementById('home')
             let divScroll = () => {
                 let wholeHeight = divscroll.scrollHeight
@@ -571,7 +600,7 @@
             }
             divscroll.onscroll = divScroll
         },
-// eslint-disable-next-line no-trailing-spaces
+        // eslint-disable-next-line no-trailing-spaces
         activated() {
             if (this.$route.meta.keepAlive) {
                 this.$nextTick(() => {
