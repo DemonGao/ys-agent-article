@@ -23,6 +23,31 @@
     .article__bd {
         img {
             max-width: 100%;
+            margin: 0 auto;
+        }
+        blockquote {
+            margin: 10px;
+            position: relative;
+            &:before {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: -10px;
+                width: 4px;
+                background-color: #cccccc;
+            }
+        }
+        pre {
+            font-family: PingFang SC;
+            white-space: pre-line;
+            background-color: #23241F;
+            word-break: break-all;
+            color: #FFF;
+            padding: 10px;
+            border-radius: 6px;
+            white-space: pre-line;
+
         }
     }
 }
