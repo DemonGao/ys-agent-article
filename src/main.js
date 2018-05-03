@@ -73,6 +73,19 @@ const history = window.sessionStorage
 history.clear()
 let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
+let isPush = false
+let endTime = Date.now()
+let methods = ['push', 'go', 'replace', 'forward', 'back']
+document.addEventListener('touchend', () => {
+    endTime = Date.now()
+})
+methods.forEach(key => {
+    let method = router[key].bind(router)
+    router[key] = function (...args) {
+        isPush = true
+        method.apply(null, args)
+    }
+})
 router.beforeEach((to, from, next) => {
     to.meta && to.meta.title ? window.document.title = to.meta.title : ''
     store.commit('updateLoadingStatus', {isLoading: true})
@@ -84,7 +97,12 @@ router.beforeEach((to, from, next) => {
         if (!fromIndex || parseInt(toIndex, 10) > parseInt(fromIndex, 10) || (toIndex === '0' && fromIndex === '0')) {
             store.commit('updateDirection', {direction: 'forward'})
         } else {
-            store.commit('updateDirection', {direction: 'reverse'})
+            // 判断是否是ios左滑返回
+            if (!isPush && (Date.now() - endTime) < 377) {
+                store.commit('updateDirection', {direction: ''})
+            } else {
+                store.commit('updateDirection', { direction: 'reverse' })
+            }
         }
     } else {
         ++historyCount
@@ -95,6 +113,7 @@ router.beforeEach((to, from, next) => {
     next()
 })
 router.afterEach(function (to) {
+    isPush = false
     store.commit('updateLoadingStatus', {isLoading: false})
 })
 new Vue({

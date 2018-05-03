@@ -6,7 +6,8 @@
         <template v-if="$route.meta.keepAlive === true">
             <transition
                 @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
-                :name="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
+                :name="viewTransition"
+                :css="!!direction">
                 <keep-alive>
                     <router-view style="width: 100%;"></router-view>
                 </keep-alive>
@@ -15,7 +16,8 @@
         <template v-else>
             <transition
                 @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
-                :name="'vux-pop-' + (direction === 'forward' ? 'in' : 'out')">
+                :name="viewTransition"
+                :css="!!direction">
                 <router-view style="width: 100%;"></router-view>
             </transition>
         </template>
@@ -140,6 +142,10 @@
             }
         },
         computed: {
+            viewTransition() {
+                if (!this.direction) return ''
+                return 'vux-pop-' + (this.direction === 'forward' ? 'in' : 'out')
+            },
             ...mapState({
                 isLoading: state => state.vux.isLoading,
                 direction: state => state.vux.direction,
