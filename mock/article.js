@@ -458,6 +458,8 @@ router.post('/agent/article/services/loadArticleDetail', (req, res) => {
                 'description': '测试发布',
                 'imgsrc': 'http://pkufi.qn.d1money.com/pic/201712/18/1513576801243220829.jpg',
                 'sourceid': 3,
+                'sourcename': '北大方正',
+                'sourceurl': 'http://www.baidu.com',
                 'publishtime': '2017-12-18 14:00:01',
                 'updatetime': '2017-12-18 14:00:04'
             },
