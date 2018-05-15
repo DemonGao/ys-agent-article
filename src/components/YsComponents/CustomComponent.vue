@@ -147,11 +147,18 @@
                         <div class="title" slot="title">
                             {{item.title}}
                         </div>
-                        <template slot="data">
-                            <span>阅读: {{item.readcount}}</span>
-                            <span>点赞: {{item.thumbsupcount}}</span>
-                            <span>评论: {{item.commentcount}}</span>
-                        </template>
+                        <!--<template slot="data">-->
+                            <!--<span>阅读: {{item.readcount}}</span>-->
+                            <!--<span>点赞: {{item.thumbsupcount}}</span>-->
+                            <!--<span>转发: {{item.sharedcount ? item.sharedcount : 0}}</span>-->
+                            <!--<span>评论: {{item.commentcount}}</span>-->
+                        <!--</template>-->
+                        <div slot="data" class="util" style="justify-content: flex-start">
+                            <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}</div>
+                            <div class="item"><i class="iconfont icon-like"></i>{{item.thumbsupcount}}</div>
+                            <div class="item"><i class="iconfont icon-forward"></i>{{item.sharedcount ? item.sharedcount : 0}}</div>
+                            <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}</div>
+                        </div>
                     </article-cell>
                 </div>
             </template>

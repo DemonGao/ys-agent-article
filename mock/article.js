@@ -384,6 +384,7 @@ router.post('/agent/article/services/articleClassification', (req, res) => {
                 'sourceid': -777777,
                 'readcount': 132,
                 'commentcount': 13,
+                'sharedcount': 46,
                 'userthumbsupcount': 0,
                 'publishtime': '2017-12-13 16:41:27',
                 'description': 'xindex推进采用“平',
@@ -449,6 +450,7 @@ router.post('/agent/article/services/loadArticleDetail', (req, res) => {
             'readcount': 20,
             'commentcount': 1,
             'shareuserid': 32,
+            'sharedcount': 45,
             'articleRedis': {
                 'id': 'C2PL3JuGJNTLl9xCeVRi5l',
                 'userid': 9,
@@ -526,6 +528,7 @@ router.post('/agent/article/services/loadArticlelistByclickType', (req, res) => 
                 introduce: '@cparagraph(1)',
                 videoImg: '@image(200x100, @hex())',
                 'commentcount|1-100': 1000,
+                'sharedcount|1-100': 1000,
                 'thumbsupcount|1-100': 1000,
                 'readcount|1-100': 1000
             }
@@ -554,6 +557,7 @@ router.post('/agent/article/services/loadarticlesBytagid', (req, res) => {
                 introduce: '@cparagraph(1)',
                 videoImg: '@image(200x100, @hex())',
                 'commentcount|1-100': 1000,
+                'sharedcount|1-100': 1000,
                 'thumbsupcount|1-100': 1000,
                 'readcount|1-100': 1000
             }
@@ -624,6 +628,7 @@ router.post('/agent/component/services/loadComponentList', (req, res) => {
             introduce: '@cparagraph(1)',
             'commentcount|1-100': 1000,
             'thumbsupcount|1-100': 1000,
+            'sharedcount|1-100': 1000,
             'readcount|1-100': 1000
         }],
         'videoList|1-2': [{

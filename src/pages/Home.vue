@@ -96,6 +96,9 @@
                                             <div class="item"><i
                                                 class="iconfont icon-attentionfill"></i>{{item.readcount}}
                                             </div>
+                                            <div class="item"><i
+                                                class="iconfont icon-forward"></i>{{item.sharedcount ? item.sharedcount : 0}}
+                                            </div>
                                         </div>
                                     </DmPanel>
                                 </template>
@@ -250,6 +253,9 @@
                                         <div class="item"><i class="iconfont icon-comment"></i>{{item.commentcount}}
                                         </div>
                                         <div class="item"><i class="iconfont icon-attentionfill"></i>{{item.readcount}}
+                                        </div>
+                                        <div class="item"><i
+                                            class="iconfont icon-forward"></i>{{item.sharedcount ? item.sharedcount : 0}}
                                         </div>
                                     </div>
                                 </DmPanel>
