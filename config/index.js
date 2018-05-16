@@ -4,8 +4,8 @@ var path = require('path')
 module.exports = {
     build: {
         env: require('./prod.env'),
-        index: path.resolve(__dirname, 'C:/Users/Administrator/eclipse-workspace/d1money/d1money-web-ys/src/main/resources/templates/agent/article/index.ftl'),
-        assetsRoot: path.resolve(__dirname, 'C:/Users/Administrator/eclipse-workspace/d1money/d1money-web-ys/src/main/webapp'),
+        index: path.resolve(__dirname, '/Users/demongao/Workspaces/eclipse-workspace/d1money/d1money-web-ys/src/main/resources/templates/agent/article/index.ftl'),
+        assetsRoot: path.resolve(__dirname, '/Users/demongao/Workspaces/eclipse-workspace/d1money/d1money-web-ys/src/main/webapp'),
         assetsSubDirectory: 'static/agent/article',
         assetsPublicPath: '/',
         productionSourceMap: true,
