@@ -28,7 +28,9 @@
                         <x-button v-if="!userthumbsupcount" type="warn" @click.native="onThumbsUp(0)">
                             点赞（{{thumbsupcount}}）
                         </x-button>
-                        <x-button v-else="!userthumbsupcount" type="default" @click.native="onThumbsUp(1)">已赞（{{thumbsupcount}}）</x-button>
+                        <x-button v-else="!userthumbsupcount" type="default" @click.native="onThumbsUp(1)">
+                            已赞（{{thumbsupcount}}）
+                        </x-button>
                     </box>
                 </div>
                 <div class="thumbsUpList" v-if="ThumbsUpUser.length!==0">
@@ -40,6 +42,7 @@
                 </div>
                 <p class="readNum">
                     <span class="left">阅读 {{readcount}}</span>
+                    <span class="left" style="margin-left: 10px;">转发 {{sharedcount}}</span>
                     <span class="right">投诉</span>
                 </p>
             </div>
@@ -151,6 +154,7 @@
                 ThumbsUpUser: [],
                 readcount: null,
                 thumbsupcount: null,
+                sharedcount: null,
                 userthumbsupcount: null,
                 shortcontent: '',
                 shareuserid: null,
@@ -184,6 +188,7 @@
                         this.articleDetail = result.articleRedis
                         result.ThumbsUpUser && (this.ThumbsUpUser = result.ThumbsUpUser)
                         this.readcount = result.readcount
+                        this.sharedcount = result.sharedcount
                         this.thumbsupcount = result.thumbsupcount
                         this.userthumbsupcount = result.userthumbsupcount
                         this.shortcontent = result.shortcontent
