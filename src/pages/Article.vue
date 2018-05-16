@@ -7,14 +7,14 @@
                  style="padding:5px 15px 10px 15px; font-size: 13px;color: #8C8C8C;margin: -8px 0 0px 0;background-color: #ffffff;line-height: 16px;">
                 <span
                     style="border: solid #8c8c8c 1px; display: inline-block; border-radius: 20px; padding: 0px 7px; margin-right: 5px; font-size: 12px;">
-                    <template v-if="parseInt(articleDetail.sourceid) === -7777777">原创</template>
-                    <template v-else="parseInt(articleDetail.sourceid) === -7777777">
+                    <template v-if="parseInt(articleDetail.sourceid) === -777777">原创</template>
+                    <template v-else="parseInt(articleDetail.sourceid) === -777777">
                         转载
                     </template>
                 </span>
                 <span>{{timeAgoHasHourAndMinute(articleDetail.publishtime)}}</span>
                 <a
-                    v-if="parseInt(articleDetail.sourceid) !== -7777777"
+                    v-if="parseInt(articleDetail.sourceid) !== -777777"
                     style="color:rgb(140, 140, 140)"
                     :href="articleDetail.sourceurl"
                 >
