@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/pages/Home'
 import Article from '@/pages/Article'
 import ArticleList from '@/pages/ArticleList'
+import UserUpload from '@/pages/UserUpload'
 
 Vue.use(Router)
 
@@ -26,6 +27,19 @@ export default new Router({
             path: '/article/:articleid',
             name: 'Article',
             component: Article,
+            meta: {
+                keepAlive: false
+            },
+            props: true
+        },
+        {
+            path: '/userUpload',
+            name: 'UserUpload',
+            component: UserUpload,
+            meta: {
+                title: '个人上传',
+                keepAlive: false
+            },
             props: true
         },
         {

@@ -133,7 +133,11 @@
         directives: {
             TransferDom
         },
-        props: ['articleid'],
+        props: {
+            articleid: {
+                type: String
+            }
+        },
         data() {
             return {
                 loading: true,

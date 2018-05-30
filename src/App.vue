@@ -3,24 +3,26 @@
         <div v-transfer-dom>
             <loading v-model="isLoading"></loading>
         </div>
-        <template v-if="$route.meta.keepAlive === true">
-            <transition
-                @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
-                :name="viewTransition"
-                :css="!!direction">
-                <keep-alive>
-                    <router-view style="width: 100%;"></router-view>
-                </keep-alive>
-            </transition>
-        </template>
-        <template v-else>
-            <transition
-                @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
-                :name="viewTransition"
-                :css="!!direction">
-                <router-view style="width: 100%;"></router-view>
-            </transition>
-        </template>
+        <transition
+            @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
+            :name="viewTransition"
+            :css="!!direction"
+        >
+            <keep-alive>
+                <router-view v-if="$route.meta.keepAlive">
+                    <!-- 这里是会被缓存的视图组件！ -->
+                </router-view>
+            </keep-alive>
+        </transition>
+        <transition
+            @after-enter="$vux.bus && $vux.bus.$emit('vux:after-view-enter')"
+            :name="viewTransition"
+            :css="!!direction"
+        >
+            <router-view v-if="!$route.meta.keepAlive">
+                <!-- 这里是不被缓存的视图组件！ -->
+            </router-view>
+        </transition>
     </div>
 </template>
 
@@ -261,12 +263,14 @@
             }
         }
     }
-    .vux-loading{
+
+    .vux-loading {
         .weui-toast {
             top: 50%;
             transform: translateX(-50%) translateY(-50%);
         }
     }
+
     .vux-pop-out-enter-active,
     .vux-pop-out-leave-active,
     .vux-pop-in-enter-active,
